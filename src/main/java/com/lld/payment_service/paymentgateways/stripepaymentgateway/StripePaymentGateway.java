@@ -1,5 +1,6 @@
-package com.lld.payment_service.services;
+package com.lld.payment_service.paymentgateways.stripepaymentgateway;
 
+import com.lld.payment_service.paymentgateways.PaymentGateway;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentLink;
@@ -9,15 +10,16 @@ import com.stripe.param.PaymentLinkCreateParams;
 import com.stripe.param.PriceCreateParams;
 import com.stripe.param.ProductCreateParams;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-@Service
-public class StripePaymentService implements PaymentService {
+@Component
+public class StripePaymentGateway implements PaymentGateway {
 
     @Value("${stripe.api.key}")
     private String stripeApiKey;
 
-    public String generatePaymentLink(String orderId) {
+    public String generatePaymentLink(String orderId, long amount, String email) {
         // Set your secret key. Remember to switch to your live secret key in production.
         // See your keys here: https://dashboard.stripe.com/apikeys
 
@@ -36,7 +38,7 @@ public class StripePaymentService implements PaymentService {
         PriceCreateParams priceCreateParams =
                 PriceCreateParams.builder()
                         .setCurrency("inr")
-                        .setUnitAmount(2345800L)
+                        .setUnitAmount(amount)
                         .setProduct(product.getId())
                         .build();
        Price price;
