@@ -25,11 +25,15 @@ public class StripePaymentGateway implements PaymentGateway {
 
         // Logic to generate payment link
         Stripe.apiKey = stripeApiKey;
+        Product product;
+        Price price;
+        PaymentLink paymentLink;
+
 
         ProductCreateParams productCreateParams =
                 ProductCreateParams.builder().setName("Samsung Washing Machine").build();
 
-        Product product = null;
+
         try {
             product = Product.create(productCreateParams);
         } catch (StripeException e) {
@@ -41,7 +45,7 @@ public class StripePaymentGateway implements PaymentGateway {
                         .setUnitAmount(amount)
                         .setProduct(product.getId())
                         .build();
-       Price price;
+
         try {
             price = Price.create(priceCreateParams);
         } catch (StripeException e) {
@@ -49,16 +53,19 @@ public class StripePaymentGateway implements PaymentGateway {
         }
 
         PaymentLinkCreateParams params =
-                PaymentLinkCreateParams.builder()
-                        .addLineItem(
-                                PaymentLinkCreateParams.LineItem.builder()
-                                        .setPrice(price.getId())
-                                        .setQuantity(1L)
-                                        .build()
-                        )
+                PaymentLinkCreateParams.builder().addLineItem(
+                        PaymentLinkCreateParams.LineItem.builder()
+                                .setPrice(price.getId())
+                                .setQuantity(1L)
+                                .build()
+                        ).setAfterCompletion(PaymentLinkCreateParams.AfterCompletion.builder()
+                                .setType(PaymentLinkCreateParams.AfterCompletion.Type.REDIRECT)
+                                .setRedirect(PaymentLinkCreateParams.AfterCompletion.Redirect.builder()
+                                        .setUrl("https://www.instagram.com").build())
+                                .build()) // Call build() here to create the AfterCompletion object
                         .build();
 
-        PaymentLink paymentLink;
+
 
         try {
              paymentLink = PaymentLink.create(params);

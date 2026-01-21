@@ -42,7 +42,7 @@ public class PaymentController {
             PaymentResponseDto paymentResponseDto = new PaymentResponseDto();
             paymentResponseDto.setUrl(url);
             paymentResponseDto.setStatus("Success");
-            paymentResponseDto.setAmount(amount);
+            paymentResponseDto.setAmount(amount/100);
 
             return new ResponseEntity<>(paymentResponseDto, HttpStatus.OK);
 
