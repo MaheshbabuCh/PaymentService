@@ -18,9 +18,8 @@ public class PaymentServiceImplementation implements PaymentService {
     public String generatePaymentLink(String orderId, long amount, String email) throws Exception {
 
         try{
-            String url =  paymentGateway.generatePaymentLink(orderId, amount, email);
 
-            return url;
+            return paymentGateway.generatePaymentLink(orderId, amount, email);
 
         }catch(Exception e){
             throw new Exception("Error generating payment link: " + e.getMessage());

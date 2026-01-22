@@ -65,8 +65,6 @@ public class StripePaymentGateway implements PaymentGateway {
                                 .build()) // Call build() here to create the AfterCompletion object
                         .build();
 
-
-
         try {
              paymentLink = PaymentLink.create(params);
         } catch (StripeException e) {
